@@ -77,8 +77,46 @@ and use the class ...
 ```
 
 With the sc4j lib we only need to define an interface with the properties we would like to read:
+(The 'DefaultValue' annotation is currently not implemented)
 
 ```java
 
+@PropertyFile("MyPropertiesFile.properties")
+public interface MyConfiguration {
 
+   /**
+   *
+   * @return returns the email.host property if the property is null the default value will returned
+   */
+   @DefaultValue("foobar@bartels.de")
+   String emailHost();
+
+   int emailPort();
+   
+   /**
+   * with the PropertyPath annotions you're able to specify a different property key to read the property
+   * @return returns the email.account.user.name property
+   */
+   @PropertyPath("email.account.user.name")
+   String userName();
+
+   @PropertyPath("email.account.user.pwd")
+   String userPwd();
+}
+
+```
+
+how to use the interface
+
+```java
+   [...]
+   
+   public void configureMailSystem() {
+      // load the properties
+      ConfigurationFactory factory = new ConfigurationFactory();
+      MyConfiguration config = factory.create(MyConfiguration.class);
+      
+      // do something with the loaded properties
+      config.getEmailHost();
+   }
 ```
