@@ -111,14 +111,13 @@ public interface MyConfiguration {
 how to use the interface
 
 ```java
-   [...]
-   
-   public void configureMailSystem() {
+   public class MyFancyClass {
       // load the properties
-      ConfigurationFactory factory = new ConfigurationFactory();
-      MyConfiguration config = factory.create(MyConfiguration.class);
-      
-      // do something with the loaded properties
-      config.getEmailHost();
+      private static final MyConfiguration CONFIG = ConfigurationFactory.create(MyConfiguration.class);
+   
+      public void configureMailSystem() {
+         // do something with the loaded properties
+         CONFIG.emailHost();
+      }
    }
 ```
