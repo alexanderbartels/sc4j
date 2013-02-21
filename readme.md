@@ -1,5 +1,3 @@
-*Kleiner test für sean.
-
 What is sc4j
 ============
 
