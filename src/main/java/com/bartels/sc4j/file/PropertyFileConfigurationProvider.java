@@ -90,8 +90,8 @@ public class PropertyFileConfigurationProvider implements ConfigurationProvider 
 	}
 	
 	@Override
-	public Object getConfigurationEntry(String configurationKey, Object defaultValue, Method method, Object[] arguments) {
+	public Object getConfigurationEntry(String configurationKey, String defaultValue, Method method, Object[] arguments) {
 		Object val = properties.get(configurationKey);
-		return val != null ? Converter.convert(val.toString(), method.getReturnType()) : defaultValue;
+		return val != null ? Converter.convert(val.toString(), method.getReturnType()) : Converter.convert(defaultValue, method.getReturnType());
 	}
 }

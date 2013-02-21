@@ -27,6 +27,6 @@ public interface ConfigurationProvider {
 	 * 
 	 * @return requested configuration entry
 	 */
-	Object getConfigurationEntry(final String configurationKey, final Object defaultValue, final Method method, final Object[] arguments);
+	Object getConfigurationEntry(final String configurationKey, final String defaultValue, final Method method, final Object[] arguments);
 	
 }

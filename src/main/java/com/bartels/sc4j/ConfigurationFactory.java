@@ -17,11 +17,11 @@ public class ConfigurationFactory {
 	 * @return instance from the given configuration
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> T create(Class<T> clazz) {
+	public static <T> T create(Class<T> clazz) {
 		return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, new ProxyListener(loadConfigurationProvider(clazz)));
 	}
 	
-	private ConfigurationProvider loadConfigurationProvider(Class<?> clazz) {
+	private static ConfigurationProvider loadConfigurationProvider(Class<?> clazz) {
 		ConfigurationProvider providerImpl = null;
 		
 		Provider provider = clazz.getAnnotation(Provider.class);

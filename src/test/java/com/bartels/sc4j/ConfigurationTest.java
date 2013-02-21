@@ -31,6 +31,7 @@ public class ConfigurationTest extends TestCase {
 		 * @return the <code>email.
 		 * port</code> property
 		 */
+         @DefaultValue("10")
 		int emailPort();
 		
 		long emailInterval();
@@ -70,18 +71,13 @@ public class ConfigurationTest extends TestCase {
 	 * Rigourous Test :-)
 	 */
 	public void testMyConfiguration() {
-		System.out.println(int.class);
-		// create the factory
-		ConfigurationFactory factory = new ConfigurationFactory();
-		assertNotNull(factory);
-		
 		// create the configurationinstance
-		MyConfiguration config = factory.create(MyConfiguration.class);
+		MyConfiguration config = ConfigurationFactory.create(MyConfiguration.class);
 		assertNotNull(config);
 		
 		assertEquals("smtp@bartels.de", config.emailHost());
 		
-		assertEquals((int) 20, config.emailPort());
+		assertEquals((int) 10, config.emailPort());
 		
 		assertEquals((long) 500, config.emailInterval());
 		

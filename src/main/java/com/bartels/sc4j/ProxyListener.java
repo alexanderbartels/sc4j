@@ -51,10 +51,15 @@ public class ProxyListener implements InvocationHandler {
 		return buffer.toString();
 		
 	}
+    
+    private String getDefaultValue(final Method method) {
+        DefaultValue defaultValue = method.getAnnotation(DefaultValue.class);
+        return defaultValue == null ? null : defaultValue.value();
+    }
 	
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
-		return configurationProvider.getConfigurationEntry(getConfigurationKey(method), null, method, arguments);
+		return configurationProvider.getConfigurationEntry(getConfigurationKey(method), getDefaultValue(method), method, arguments);
 	}
 	
 	/**
