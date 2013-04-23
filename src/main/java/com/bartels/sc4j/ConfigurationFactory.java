@@ -6,9 +6,7 @@ import com.bartels.sc4j.file.PropertyFileConfigurationProvider;
 
 public class ConfigurationFactory {
 
-	public ConfigurationFactory() {
-		
-	}
+	private ConfigurationFactory() { throw new AssertionError(); }
 	
 	/**
 	 * 
@@ -29,14 +27,12 @@ public class ConfigurationFactory {
 		if(provider != null) {
 			String providerClazz = provider.value();
 			try {
-				System.out.println("try to load provider impl: " + providerClazz);
 				providerImpl = (ConfigurationProvider) Class.forName(providerClazz).newInstance();
 			} catch (Exception e) {
 				throw new RuntimeException("Unable to load and create provider implementation: " + e.getMessage(), e);
 			}
 			
 		} else {
-			System.out.println("no provider annotation found. load default file provider impl");
 			providerImpl = new PropertyFileConfigurationProvider();
 		}
 
