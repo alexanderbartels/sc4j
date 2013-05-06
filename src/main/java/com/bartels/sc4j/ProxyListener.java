@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
  *
  */
 public class ProxyListener implements InvocationHandler {
-
+	
 	private final ConfigurationProvider configurationProvider;
 	
 	public ProxyListener(final ConfigurationProvider configurationProvider) {
@@ -27,11 +27,14 @@ public class ProxyListener implements InvocationHandler {
 	 */
 	private String getConfigurationKey(final Method m) {
 		
+		// look for a hard coded property path
 		PropertyPath path = m.getAnnotation(PropertyPath.class);
 		if(path != null && path.value() != null) {
 			return path.value();
 		}
 		
+		// if property path was not defined through an annotation, 
+		// we use the method name to build it
 		StringBuffer buffer = new StringBuffer();
 		String methodName = m.getName();
 		
@@ -46,10 +49,7 @@ public class ProxyListener implements InvocationHandler {
 			}
 		}
 		
-		System.out.println("config key: " + buffer.toString());
-		
 		return buffer.toString();
-		
 	}
     
     private String getDefaultValue(final Method method) {
@@ -60,33 +60,5 @@ public class ProxyListener implements InvocationHandler {
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
 		return configurationProvider.getConfigurationEntry(getConfigurationKey(method), getDefaultValue(method), method, arguments);
-	}
-	
-	/**
-	 * prints about some information about the method that was invoked
-	 * 
-	 * @param proxy
-	 * @param method
-	 * @param arguments
-	 */
-	protected void debugMethodInvoke(Object proxy, Method method, Object[] arguments) {
-		System.out.println("Proxy: " + proxy.getClass().getSimpleName());
-		try {
-            System.out.print("Begin method: "+ method.getName() + "( ");
-            
-            if(arguments != null) {
-            	for(int i=0; i < arguments.length; i++) {
-            		if(i > 0) {
-            			System.out.print(", ");
-            		}
-            		System.out.print(" " + arguments[i].toString());
-            	}
-            }
-            System.out.println(" )");
-		} catch(Exception e) {
-			e.printStackTrace();
-			// TODO create a specific exception
-			throw new RuntimeException("unexpected invocation exception: " + e.getMessage());
-		}
 	}
 }

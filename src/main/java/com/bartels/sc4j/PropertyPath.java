@@ -9,5 +9,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface PropertyPath {
 
+	/**
+	 * defines a optional property path 
+	 * 
+	 * @return the optional property path
+	 */
 	String value();
 }

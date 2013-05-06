@@ -2,10 +2,9 @@ What is sc4j
 ============
 
 
-
 sc4j is a simple library to read a configuration, for example from a property file.
-If you like the way to read a configuration, but your configuration isn't stored in a proeprty file, 
-you can write your own 'ConfigurationProvider'. See 'Write your own ConfigurationProvider' below.
+If you like the way to read a configuration, but your configuration isn't stored in a property file, 
+you can write your own 'ConfigurationProvider'.
 
 Simple Example
 ==============

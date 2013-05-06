@@ -28,10 +28,9 @@ public class ConfigurationTest extends TestCase {
 		String emailHost();
 		
 		/**
-		 * @return the <code>email.
-		 * port</code> property
+		 * @return the <code>email.port</code> property
 		 */
-         @DefaultValue("10")
+         @DefaultValue("10") // default value will be returned if the property was not found by the provider
 		int emailPort();
 		
 		long emailInterval();
@@ -48,6 +47,9 @@ public class ConfigurationTest extends TestCase {
 		
 		@PropertyPath("my.property")
 		String someOtherProp();
+		
+		@PropertyPath("my-crazY!PROP#p*a+t&h")
+		String crazyPropertyPath();
 	}
 	
 	/**
@@ -71,7 +73,7 @@ public class ConfigurationTest extends TestCase {
 	 * Rigourous Test :-)
 	 */
 	public void testMyConfiguration() {
-		// create the configurationinstance
+		// create the configuration instance
 		MyConfiguration config = ConfigurationFactory.create(MyConfiguration.class);
 		assertNotNull(config);
 		
@@ -92,6 +94,8 @@ public class ConfigurationTest extends TestCase {
 		assertEquals((float) 3.14, config.emailFloat());
 		
 		assertEquals("MyPropertyValue", config.someOtherProp());
+		
+		assertEquals("TestValue", config.crazyPropertyPath());
 		System.out.println("TEST finished");
 	}
 }
