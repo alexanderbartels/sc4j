@@ -98,7 +98,7 @@ public class ConfigurationTest extends TestCase {
 		
 		assertEquals("MyPropertyValue", config.someOtherProp());
 		
-		assertEquals((int) 10, config.commandLineArg());
+		assertEquals((int) 15, config.commandLineArg());
 		
 		assertEquals("TestValue", config.crazyPropertyPath());
 		System.out.println("TEST finished");
