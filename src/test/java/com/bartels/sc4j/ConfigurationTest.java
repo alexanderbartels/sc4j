@@ -33,6 +33,9 @@ public class ConfigurationTest extends TestCase {
          @DefaultValue("10") // default value will be returned if the property was not found by the provider
 		int emailPort();
 		
+         @DefaultValue("5")
+        int commandLineArg();
+         
 		long emailInterval();
 		
 		char emailIdentifier();
@@ -74,7 +77,7 @@ public class ConfigurationTest extends TestCase {
 	 */
 	public void testMyConfiguration() {
 		// create the configuration instance
-		MyConfiguration config = ConfigurationFactory.create(MyConfiguration.class);
+		MyConfiguration config = ConfigurationFactory.create(MyConfiguration.class, new String[]{"--command.line.arg", "15"});
 		assertNotNull(config);
 		
 		assertEquals("smtp@bartels.de", config.emailHost());
@@ -94,6 +97,8 @@ public class ConfigurationTest extends TestCase {
 		assertEquals((float) 3.14, config.emailFloat());
 		
 		assertEquals("MyPropertyValue", config.someOtherProp());
+		
+		assertEquals((int) 15, config.commandLineArg());
 		
 		assertEquals("TestValue", config.crazyPropertyPath());
 		System.out.println("TEST finished");

@@ -2,6 +2,10 @@ package com.bartels.sc4j;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.bartels.sc4j.util.Converter;
 
 /**
  * implements an interface at runtime.
@@ -15,11 +19,41 @@ public class ProxyListener implements InvocationHandler {
 	
 	private final ConfigurationProvider configurationProvider;
 	
+	private Map<String, String> defaults;
+	
 	public ProxyListener(final ConfigurationProvider configurationProvider) {
 		this.configurationProvider = configurationProvider;
 	}
 	
+	public ProxyListener(final ConfigurationProvider configurationProvider, final String[] commandlineArgs) {
+		this.configurationProvider = configurationProvider;
+		this.defaults = parseCommandLineArguments(commandlineArgs);
+	}
 
+	/**
+	 * parses the array with command line arguments
+	 * 
+	 * @param args the array with arguments to parse
+	 * 
+	 * @return a map with the default configuration mapping
+	 */
+	private Map<String, String> parseCommandLineArguments(final String[] args) {
+		// TODO The "parser" should be implemented against an interface to keep it interchangeable and testable
+		
+		if(args == null) {
+			throw new IllegalArgumentException("args should not be null");
+		}
+		
+		Map<String, String> propertyMapping = new HashMap<String, String>();
+		
+		for(int i = 0; i < args.length; i++) {
+			if(args[i].startsWith("--") && (i + 1) < args.length) {
+				propertyMapping.put(args[i].substring(2), args[i + 1]);
+			}
+		}
+		return propertyMapping;
+	}
+	
 	/**
 	 * @param m method to get the configuration key for
 	 * 
@@ -59,6 +93,11 @@ public class ProxyListener implements InvocationHandler {
 	
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] arguments) throws Throwable {
-		return configurationProvider.getConfigurationEntry(getConfigurationKey(method), getDefaultValue(method), method, arguments);
+		String configKey = getConfigurationKey(method);
+		
+		if(defaults.containsKey(configKey)) {
+			return Converter.convert(defaults.get(configKey), method.getReturnType());
+		}
+		return configurationProvider.getConfigurationEntry(configKey, getDefaultValue(method), method, arguments);
 	}
 }
