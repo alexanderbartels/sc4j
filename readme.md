@@ -1,4 +1,4 @@
-What is sc4j
+What is sc4j [![Build Status](https://drone.io/github.com/alexanderbartels/sc4j/status.png)](https://drone.io/github.com/alexanderbartels/sc4j/latest)
 ============
 
 sc4j provides an easy and fast possibility to read properties (e.g. from a properties file).
