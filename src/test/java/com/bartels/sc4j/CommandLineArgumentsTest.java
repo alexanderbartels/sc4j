@@ -11,6 +11,16 @@ import junit.framework.TestSuite;
  */
 public class CommandLineArgumentsTest extends TestCase {
     
+    // configuration interface to test
+    public interface ServerConfiguration {
+        
+        @DefaultValue("80")
+        int serverPort();
+        
+        @DefaultValue("127.0.0.1")
+        String serverHost();
+    }
+    
     
     
 }
