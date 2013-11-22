@@ -3,11 +3,13 @@ package com.bartels.sc4j.file;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Properties;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.bartels.sc4j.ConfigurationProvider;
 import com.bartels.sc4j.util.Converter;
@@ -21,22 +23,10 @@ import com.bartels.sc4j.util.Converter;
  *
  */
 public class PropertyFileConfigurationProvider implements ConfigurationProvider {
+	private static final Logger logger = LoggerFactory.getLogger(PropertyFileConfigurationProvider.class);
 	
-	//make it final or reusable by different instances
 	private Properties properties;
 	
-	@Override
-	public void loadConfiguration(Class<?> clazz) {
-		Annotation[] annotations = clazz.getAnnotations();
-		if(annotations != null && annotations.length > 0) {
-			for(Annotation a : annotations) {
-				if(a.annotationType().equals(PropertyFile.class)) {
-					this.properties = loadPropertyFile(((PropertyFile)a).value());
-				}
-			}
-		}
-		System.out.println("properties: " + properties);
-	}
 	
 	/**
 	 * loads the given properties file
@@ -76,22 +66,35 @@ public class PropertyFileConfigurationProvider implements ConfigurationProvider 
 		return props;
 	}
 	
-	/**
-	 * loads a file from the given url
-	 * @param url
-	 * @return
-	 */
 	private File loadFileFromURL(final URL url) {
 		try {
 			return new File(url.toURI());
 		} catch (URISyntaxException e) {
-			throw new RuntimeException("proeprties file not found: " + url);
+			throw new RuntimeException("properties file not found: " + url);
 		}
 	}
 	
 	@Override
 	public Object getConfigurationEntry(String configurationKey, String defaultValue, Method method, Object[] arguments) {
 		Object val = properties.get(configurationKey);
-		return val != null ? Converter.convert(val.toString(), method.getReturnType()) : Converter.convert(defaultValue, method.getReturnType());
+		
+		if(val != null) {
+			return Converter.convert(val.toString(), method.getReturnType());
+		} else {
+			// return the default value, because no entry was found in the properties file
+			return Converter.convert(defaultValue, method.getReturnType());
+		}
+	}
+	
+	@Override
+	public void loadConfiguration(Class<?> clazz) {
+		PropertyFile propertyFile = clazz.getAnnotation(PropertyFile.class);
+		
+		if(propertyFile == null) {
+			throw new IllegalStateException("Missing @PropertyFile annotation");
+		}
+		
+		this.properties = loadPropertyFile(propertyFile.value());
+		logger.debug("Properties loaded. Path: {}, Properties: {}", propertyFile.value(), properties);
 	}
 }

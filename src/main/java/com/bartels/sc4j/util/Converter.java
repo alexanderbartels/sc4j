@@ -3,6 +3,8 @@ package com.bartels.sc4j.util;
 
 public class Converter {
 
+	// TODO refactor me!!!
+	
 	public enum SupportedDataType {
 		
 		STRING(String.class),

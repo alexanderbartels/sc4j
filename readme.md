@@ -1,16 +1,15 @@
-What is sc4j
+What is sc4j [![Build Status](https://drone.io/github.com/alexanderbartels/sc4j/status.png)](https://drone.io/github.com/alexanderbartels/sc4j/latest)
 ============
 
-
-
-sc4j is a simple library to read a configuration, for example from a property file.
-If you like the way to read a configuration, but your configuration isn't stored in a proeprty file, 
-you can write your own 'ConfigurationProvider'. See 'Write your own ConfigurationProvider' below.
+sc4j provides an easy and fast possibility to read properties (e.g. from a properties file).
+The default implementation reads the configuration from a properties file, 
+but it is very easy to swap the implementation against your own one.
+For this purpose, only the 'ConfigurationInterface' provider must be implemented.
 
 Simple Example
 ==============
 
-Say you would like to read the following property file:
+If you would like to read the following property file:
 
 ````
 #my configuration file
@@ -25,8 +24,9 @@ email.port=20
 email.account.user.name=bartels
 email.account.user.pwd=bartels
 ```
-
-Normally we write a class to wrap it:
+	
+Normally we would implement a class to wrap the access to the property file,
+Like the following example:
 
 ```java
 
@@ -64,7 +64,7 @@ public class MyConfiguration {
 
 ```
 
-and use the class ...
+and then we would use the class like this:
 
 ```java
   [...]
@@ -79,7 +79,6 @@ and use the class ...
 ```
 
 With the sc4j lib we only need to define an interface with the properties we would like to read:
-(The 'DefaultValue' annotation is currently not implemented)
 
 ```java
 
@@ -108,7 +107,7 @@ public interface MyConfiguration {
 
 ```
 
-how to use the interface
+how to use the interface:
 
 ```java
    public class MyFancyClass {
