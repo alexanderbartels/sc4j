@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>sc4j by alexanderbartels</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>sc4j</h1>
+          <h2>simple configuration library 4 java</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/alexanderbartels/sc4j/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/alexanderbartels/sc4j/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/alexanderbartels/sc4j" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="what-is-sc4j-" class="anchor" href="#what-is-sc4j-"><span class="octicon octicon-link"></span></a>What is sc4j <a href="https://drone.io/github.com/alexanderbartels/sc4j/latest"><img src="https://drone.io/github.com/alexanderbartels/sc4j/status.png" alt="Build Status"></a>
+</h1>
+
+<p>sc4j provides an easy and fast possibility to read properties (e.g. from a properties file).
+The default implementation reads the configuration from a properties file, 
+but it is very easy to swap the implementation against your own one.
+For this purpose, only the 'ConfigurationInterface' provider must be implemented.</p>
+
+<h1>
+<a name="simple-example" class="anchor" href="#simple-example"><span class="octicon octicon-link"></span></a>Simple Example</h1>
+
+<p>If you would like to read the following property file:</p>
+
+<pre><code>#my configuration file
+
+# this is the mail host to send the mails
+email.host=smtp@bartels.de
+
+# the port to from the mail host
+email.port=20
+
+#authentication 
+email.account.user.name=bartels
+email.account.user.pwd=bartels
+</code></pre>
+
+<p>Normally we would implement a class to wrap the access to the property file,
+Like the following example:</p>
+
+<div class="highlight highlight-java"><pre>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyConfiguration</span> <span class="o">{</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">EMAIL_HOST</span> <span class="o">=</span> <span class="s">"email.host"</span><span class="o">;</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">EMAIL_PORT</span> <span class="o">=</span> <span class="s">"email.port"</span><span class="o">;</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">EMAIL_ACCOUNT_USER_NAME</span> <span class="o">=</span> <span class="s">"email.account.user.name"</span><span class="o">;</span>
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">EAMIL_ACCOUNT_USER_PWD</span>  <span class="o">=</span> <span class="s">"email.account.user.pwd"</span><span class="o">;</span>
+
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">EMAIL_HOST_DEFAULT_VALUE</span> <span class="o">=</span> <span class="s">"foobar@bartels.de"</span><span class="o">;</span>
+
+   <span class="kd">private</span> <span class="n">Properties</span> <span class="n">properties</span><span class="o">;</span>
+
+   <span class="kd">public</span> <span class="nf">MyConfiguration</span><span class="o">(</span><span class="kd">final</span> <span class="n">String</span> <span class="n">propertyFilePath</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// some magic to load the file and the properties;</span>
+   <span class="o">}</span>
+
+   <span class="kd">public</span> <span class="n">String</span> <span class="nf">getEmailHost</span><span class="o">()</span> <span class="o">{</span>
+      <span class="n">String</span> <span class="n">host</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">EMAIL_HOST</span><span class="o">);</span>
+      <span class="k">return</span> <span class="n">host</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="n">EMAIL_HOST_DEFAULT_VALUE</span> <span class="o">:</span> <span class="n">host</span><span class="o">;</span>
+   <span class="o">}</span>
+
+   <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getEmailPort</span><span class="o">()</span> <span class="o">{</span>
+      <span class="n">String</span>  <span class="n">sPort</span> <span class="o">=</span> <span class="n">properties</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">EMAIL_PORT</span><span class="o">);</span>
+      <span class="k">if</span><span class="o">(</span><span class="n">sPort</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+         <span class="kt">int</span> <span class="n">port</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">sPort</span><span class="o">);</span>
+         <span class="k">return</span> <span class="n">port</span><span class="o">;</span>
+      <span class="o">}</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalStateException</span><span class="o">(</span><span class="s">"invalid argument"</span><span class="o">);</span>
+   <span class="o">}</span>
+
+   <span class="c1">// getter methods for the other properties</span>
+   <span class="o">[...]</span>
+<span class="o">}</span>
+
+</pre></div>
+
+<p>and then we would use the class like this:</p>
+
+<div class="highlight highlight-java"><pre>  <span class="o">[...]</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">configureMailSystem</span><span class="o">()</span> <span class="o">{</span>
+     <span class="c1">// load the properties</span>
+     <span class="n">MyConfiguration</span> <span class="n">config</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyConfiguration</span><span class="o">(</span><span class="s">"MyPropertiesFile.properties"</span><span class="o">);</span>  
+
+     <span class="c1">// do something with the loaded properties</span>
+     <span class="n">config</span><span class="o">.</span><span class="na">getEmailHost</span><span class="o">();</span>
+  <span class="o">}</span>
+</pre></div>
+
+<p>With the sc4j lib we only need to define an interface with the properties we would like to read:</p>
+
+<div class="highlight highlight-java"><pre>
+<span class="nd">@PropertyFile</span><span class="o">(</span><span class="s">"MyPropertiesFile.properties"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">MyConfiguration</span> <span class="o">{</span>
+
+   <span class="cm">/**</span>
+<span class="cm">   *</span>
+<span class="cm">   * @return returns the email.host property if the property is null the default value will returned</span>
+<span class="cm">   */</span>
+   <span class="nd">@DefaultValue</span><span class="o">(</span><span class="s">"foobar@bartels.de"</span><span class="o">)</span>
+   <span class="n">String</span> <span class="nf">emailHost</span><span class="o">();</span>
+
+   <span class="kt">int</span> <span class="nf">emailPort</span><span class="o">();</span>
+
+   <span class="cm">/**</span>
+<span class="cm">   * with the PropertyPath annotions you're able to specify a different property key to read the property</span>
+<span class="cm">   * @return returns the email.account.user.name property</span>
+<span class="cm">   */</span>
+   <span class="nd">@PropertyPath</span><span class="o">(</span><span class="s">"email.account.user.name"</span><span class="o">)</span>
+   <span class="n">String</span> <span class="nf">userName</span><span class="o">();</span>
+
+   <span class="nd">@PropertyPath</span><span class="o">(</span><span class="s">"email.account.user.pwd"</span><span class="o">)</span>
+   <span class="n">String</span> <span class="nf">userPwd</span><span class="o">();</span>
+<span class="o">}</span>
+
+</pre></div>
+
+<p>how to use the interface:</p>
+
+<div class="highlight highlight-java"><pre>   <span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyFancyClass</span> <span class="o">{</span>
+      <span class="c1">// load the properties</span>
+      <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">MyConfiguration</span> <span class="n">CONFIG</span> <span class="o">=</span> <span class="n">ConfigurationFactory</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="n">MyConfiguration</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">configureMailSystem</span><span class="o">()</span> <span class="o">{</span>
+         <span class="c1">// do something with the loaded properties</span>
+         <span class="n">CONFIG</span><span class="o">.</span><span class="na">emailHost</span><span class="o">();</span>
+      <span class="o">}</span>
+   <span class="o">}</span>
+</pre></div>
+        </section>
+
+        <footer>
+          sc4j is maintained by <a href="https://github.com/alexanderbartels">alexanderbartels</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
